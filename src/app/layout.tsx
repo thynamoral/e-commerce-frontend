@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import QueryProvider from "@/components/providers/QueryClientProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const montserrat = Montserrat({
   weight: ["400", "600", "700"],
@@ -22,7 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} antialiased`}>{children}</body>
+      <body className={`${montserrat.className} antialiased`}>
+        <QueryProvider>{children}</QueryProvider>
+        <Toaster />;
+      </body>
     </html>
   );
 }
