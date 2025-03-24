@@ -13,13 +13,14 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useLogin } from "@/services/loginService";
+import { useToast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -39,9 +40,27 @@ export default function LoginPage() {
   });
   const { control, handleSubmit } = loginForm;
 
+  // hooks
+  const { toast } = useToast();
+
+  // services
+  const { mutateAsync: login } = useLogin();
+
   // handling functions
-  const onSubmit = (values: LoginSchema) => {
-    alert(values);
+  const onSubmit = async (values: LoginSchema) => {
+    try {
+      const res = await login(values);
+      toast({
+        title: "Login Success!",
+        variant: "success",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description: error.message,
+        variant: "destructive", // Red color alert
+      });
+    }
   };
 
   return (
@@ -87,6 +106,7 @@ export default function LoginPage() {
                       <FormControl>
                         <Input
                           {...field}
+                          type="password"
                           placeholder="Password*"
                           className="h-14"
                         />
