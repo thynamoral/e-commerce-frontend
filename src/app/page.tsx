@@ -1,5 +1,11 @@
+import SearchAndFilter from "@/components/ui/search-and-filter";
 import Image from "next/image";
 
 export default function Home() {
-  return <div className="min-h-[120vh]">Home</div>;
+  return (
+    <div className="max-w-[1400px] w-full lg:min-h-full flex gap-4 mx-auto pt-8 pb-12">
+      <SearchAndFilter />
+      <div className="h-[1500px]">Home</div>
+    </div>
+  );
 }
