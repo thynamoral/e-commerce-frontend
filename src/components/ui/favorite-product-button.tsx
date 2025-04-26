@@ -14,7 +14,10 @@ export default function FavoriteProductButton() {
       <Button
         variant="secondary"
         className="cursor-pointer rounded-full"
-        onClick={handleFavorite}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleFavorite();
+        }}
       >
         <Heart fill={isFavorite ? "black" : "none"} className="w-4 h-4" />
       </Button>

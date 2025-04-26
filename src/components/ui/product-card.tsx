@@ -1,12 +1,17 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import { Badge } from "./badge";
 import FavoriteProductButton from "./favorite-product-button";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ProductCard() {
+  const router = useRouter();
   return (
-    <Link href="/products/123">
+    <div
+      onClick={() => router.push("/products/123")}
+      className="cursor-pointer"
+    >
       <div className="space-y-2">
         <div className="relative h-[360px]">
           <FavoriteProductButton />
@@ -25,6 +30,6 @@ export default function ProductCard() {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
