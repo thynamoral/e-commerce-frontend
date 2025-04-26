@@ -1,11 +1,13 @@
 import Image from "next/image";
 import React from "react";
 import { Badge } from "./badge";
+import FavoriteProductButton from "./favorite-product-button";
 
 export default function ProductCard() {
   return (
     <div className="space-y-2">
       <div className="relative h-[360px]">
+        <FavoriteProductButton />
         <Image
           src="/men-tshirt1.webp"
           alt="men-striped-print-shirt"
