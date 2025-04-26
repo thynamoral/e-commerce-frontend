@@ -4,6 +4,7 @@ import React from "react";
 import { Badge } from "./badge";
 import FavoriteProductButton from "./favorite-product-button";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/lib/utils";
 
 export default function ProductCard() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function ProductCard() {
         <div className="px-3 space-y-1.5">
           <p className="font-medium text-black-3">Men Striped Print Shirt</p>
           <div className="flex justify-between items-center">
-            <p className="text-lg font-bold">$200</p>
+            <p className="text-lg font-bold">{formatCurrency(200)}</p>
             <Badge className="text-[10px]">Men Shirts</Badge>
           </div>
         </div>
