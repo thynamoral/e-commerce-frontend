@@ -41,7 +41,5 @@ export const useGetProducts = (params: GetProductsPayload) => {
   return useQuery({
     queryKey: ["products", params],
     queryFn: () => getProducts(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
-    enabled: true,
   });
 };
