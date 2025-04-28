@@ -12,7 +12,6 @@ type CategoryResponse = {
 const getCategories = async () => {
   try {
     const response = await fetchApi<CategoryResponse[]>("/categories");
-    console.log(response);
     return response;
   } catch (error) {
     console.log(error);

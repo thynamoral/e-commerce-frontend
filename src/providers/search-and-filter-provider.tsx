@@ -32,13 +32,17 @@ export default function SearchAndFilterFormProvider({
     // set query params for search
     if (search) {
       setValue("search", search);
+    } else {
+      setValue("search", "");
     }
 
     // set query params for category
     if (category.length > 0) {
       setValue("category", category);
+    } else {
+      setValue("category", []);
     }
-  }, [searchParams]);
+  }, [searchParams, setValue]);
 
   return <FormProvider {...searchAndFilterForm}>{children}</FormProvider>;
 }
