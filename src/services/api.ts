@@ -15,7 +15,7 @@ export const fetchApi = async <T>(
 
   if (response.ok) return response.json() as Promise<T>;
 
-  const errorData = await response.json().catch(() => ({}));
+  const errorData = await response.json().catch((e) => e);
   const { status } = errorData;
 
   if (
@@ -39,10 +39,7 @@ export const fetchApi = async <T>(
     }
   }
 
-  throw {
-    status,
-    ...errorData,
-  };
+  throw errorData as Error;
 };
 
 const redirectToLogin = () => {
