@@ -15,7 +15,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
   return (
     <div
-      onClick={() => router.push("/products/123")}
+      onClick={() => router.push(`/products/${product.product_id}`)}
       className="cursor-pointer"
     >
       <div className="space-y-2">
