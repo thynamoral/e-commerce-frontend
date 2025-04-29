@@ -1,19 +1,17 @@
 "use client";
-import { Controller, useForm, useFormContext } from "react-hook-form";
-import { Button } from "./button";
-import { Form, FormItem } from "./form";
 import { SearchAndFilterForm } from "@/providers/search-and-filter-provider";
 import { useGetCategories } from "@/services/category/getCategories";
 import CheckboxWrapper from "@/wrappers/checkbox-wrapper";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Controller, useForm, useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form, FormItem } from "@/components/ui/form";
 
 export default function FilterInput() {
   const form = useForm();
-  const { control, getValues, setValue, watch } =
+  const { control, getValues, setValue } =
     useFormContext<SearchAndFilterForm>();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   // data from api
   const { data: categories } = useGetCategories();
@@ -60,10 +58,6 @@ export default function FilterInput() {
     onChange(newValues);
     router.push(`?${params.toString()}`);
   };
-
-  // watch form values
-  const watchCategoryValues = watch("category");
-  // console.log(watchCategoryValues);
 
   return (
     <div>

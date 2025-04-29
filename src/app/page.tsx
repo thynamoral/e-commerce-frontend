@@ -1,6 +1,6 @@
 import HomeProducts from "@/components/app/home/home-products";
 import ContainerWrapper from "@/components/ui/container-wrapper";
-import SearchAndFilter from "@/components/ui/search-and-filter";
+import SearchAndFilter from "@/components/app/home/search-and-filter";
 import SearchAndFilterFormProvider from "@/providers/search-and-filter-provider";
 
 export default function Home() {

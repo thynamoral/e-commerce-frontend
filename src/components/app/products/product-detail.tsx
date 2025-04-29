@@ -16,7 +16,6 @@ export default function ProductDetail() {
     data: product,
     isLoading: isLoadingProduct,
     isError,
-    error,
   } = useGetCurrentProduct(id);
 
   if (isLoadingProduct) {
