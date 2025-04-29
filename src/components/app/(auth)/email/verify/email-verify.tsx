@@ -19,7 +19,7 @@ export default function EmailVerify() {
     { code },
     shouldVerify
   );
-  const isInvalid = isError || isExpired;
+  const isInvalid = !exp || isError || isExpired;
 
   // useEffect
   React.useEffect(() => {
