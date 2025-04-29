@@ -27,10 +27,7 @@ export default function LoginForm() {
 
   return (
     <Form {...loginFormContext}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 text-center"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={control}
           name="email"
@@ -77,7 +74,7 @@ export default function LoginForm() {
         <Button type="submit" className="rounded-full cursor-pointer">
           Login
         </Button>
-        <p className="space-x-1">
+        <p className="space-x-1 text-center">
           <span>{"Don't have an account?"}</span>
           <RedirectLinkButton to="/register">Register</RedirectLinkButton>
         </p>
