@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import { Button, RedirectLinkButton } from "@/components/ui/button";
 import {
   Form,
@@ -10,41 +8,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginForm as TLoginForm } from "@/providers/auth/login-provider";
-import { useFormContext } from "react-hook-form";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import Link from "next/link";
-import { useLogin } from "@/services/auth/login";
 import Spinner from "@/components/ui/spinner";
-import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
+import { RegisterForm as TRegisterForm } from "@/providers/auth/register-provider";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import * as React from "react";
+import { useFormContext } from "react-hook-form";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [showPassword, setShowPassword] = React.useState(false);
-  const loginFormContext = useFormContext<TLoginForm>();
-  const { control, handleSubmit } = loginFormContext;
-  const { mutateAsync: login, isPending, isError, error } = useLogin();
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const registerFormContext = useFormContext<TRegisterForm>();
+  const { control, handleSubmit } = registerFormContext;
 
   // handling functions
-  const onSubmit = (data: TLoginForm) => {
-    login(data);
+  const onSubmit = (data: TRegisterForm) => {
+    console.log(data);
   };
 
-  React.useEffect(() => {
-    if (isError) {
-      toast.error(error?.message || "Something went wrong");
-    }
-  }, [isError, error]);
-
   return (
-    <Form {...loginFormContext}>
-      <Toaster
-        position="top-center"
-        offset={{ top: 100 }}
-        toastOptions={{
-          className: "!text-red-500",
-        }}
-      />
+    <Form {...registerFormContext}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={control}
@@ -86,24 +68,51 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <RedirectLinkButton to="/password/forgot">
-          {"Forgot password?"}
-        </RedirectLinkButton>
+        <FormField
+          control={control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    placeholder="Confirm password"
+                    type={showConfirmPassword ? "text" : "password"}
+                  />
+                  {
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="absolute top-1/2 right-0 -translate-y-1/2 no-underline cursor-pointer hover:bg-neutral-200"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {!showConfirmPassword ? <EyeIcon /> : <EyeOffIcon />}
+                    </Button>
+                  }
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button
           type="submit"
-          disabled={isPending}
+          //   disabled={isPending}
           className="relative rounded-full cursor-pointer"
         >
-          <span>Login</span>
-          {isPending && (
+          <span>Register</span>
+          {true && (
             <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
               <Spinner />
             </span>
           )}
         </Button>
         <p className="space-x-1 text-center">
-          <span>{"Don't have an account?"}</span>
-          <RedirectLinkButton to="/register">Register</RedirectLinkButton>
+          <span>{"Already have an account?"}</span>
+          <RedirectLinkButton to="/login">Login</RedirectLinkButton>
         </p>
       </form>
     </Form>

@@ -1,4 +1,4 @@
-import { LoginForm } from "@/providers/login-provider";
+import { LoginForm } from "@/providers/auth/login-provider";
 import { useMutation } from "@tanstack/react-query";
 import { fetchApi } from "../api";
 
