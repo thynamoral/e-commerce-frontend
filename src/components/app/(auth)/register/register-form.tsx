@@ -62,7 +62,7 @@ export default function RegisterForm() {
           className: `${
             !isSuccess && isError ? "!text-red-500" : "!text-green-500"
           }`,
-          duration: isSuccess && !isError ? Infinity : 5000,
+          duration: isSuccess && !isError ? Infinity : 2500,
           closeButton: isSuccess && !isError,
           classNames: {
             closeButton: "hover:!bg-white !border-none",
