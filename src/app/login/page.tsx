@@ -1,6 +1,6 @@
 import Login from "@/components/app/login/login";
 import ContainerWrapper from "@/components/ui/container-wrapper";
-import LoginFormProvider from "@/providers/login-provider";
+import LoginFormProvider from "@/providers/auth/login-provider";
 
 export default function LoginPage() {
   return (

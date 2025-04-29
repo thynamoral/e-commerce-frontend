@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginForm as TLoginForm } from "@/providers/login-provider";
+import { LoginForm as TLoginForm } from "@/providers/auth/login-provider";
 import { useFormContext } from "react-hook-form";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
@@ -30,6 +30,7 @@ export default function LoginForm() {
     login(data);
   };
 
+  // useEffect
   React.useEffect(() => {
     if (isError) {
       toast.error(error?.message || "Something went wrong");
