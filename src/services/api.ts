@@ -8,12 +8,12 @@ export const fetchApi = async <T>(
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
     {
-      ...init,
       headers: {
-        ...init?.headers,
         "Content-Type": "application/json",
+        ...init?.headers,
       },
       credentials: "include",
+      ...init,
     }
   );
 

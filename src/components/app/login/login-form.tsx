@@ -30,6 +30,7 @@ export default function LoginForm() {
     login(data);
   };
 
+  // useEffect
   React.useEffect(() => {
     if (isError) {
       toast.error(error?.message || "Something went wrong");

@@ -8,25 +8,67 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/sonner";
 import Spinner from "@/components/ui/spinner";
-import { RegisterForm as TRegisterForm } from "@/providers/auth/register-provider";
+import {
+  defaultRegisterValues,
+  RegisterForm as TRegisterForm,
+} from "@/providers/auth/register-provider";
+import { useRegister } from "@/services/auth/register";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const registerFormContext = useFormContext<TRegisterForm>();
-  const { control, handleSubmit } = registerFormContext;
+  const { control, handleSubmit, reset } = registerFormContext;
+  const {
+    mutateAsync: register,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+    data: registerResponse,
+  } = useRegister();
 
   // handling functions
   const onSubmit = (data: TRegisterForm) => {
-    console.log(data);
+    register(data);
   };
+
+  // useEffect
+  React.useEffect(() => {
+    if (isError) {
+      toast.error(error?.message || "Something went wrong");
+    }
+  }, [isError, error]);
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast.success(registerResponse?.message || "Successfully registered");
+      reset({ ...defaultRegisterValues });
+    }
+  }, [isSuccess]);
 
   return (
     <Form {...registerFormContext}>
+      <Toaster
+        position="top-center"
+        offset={{ top: 100 }}
+        toastOptions={{
+          className: `${
+            !isSuccess && isError ? "!text-red-500" : "!text-green-500"
+          }`,
+          duration: isSuccess && !isError ? Infinity : 5000,
+          closeButton: isSuccess && !isError,
+          classNames: {
+            closeButton: "hover:!bg-white !border-none",
+          },
+        }}
+      />
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={control}
@@ -100,11 +142,11 @@ export default function RegisterForm() {
         />
         <Button
           type="submit"
-          //   disabled={isPending}
+          disabled={isPending}
           className="relative rounded-full cursor-pointer"
         >
           <span>Register</span>
-          {true && (
+          {isPending && (
             <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
               <Spinner />
             </span>
