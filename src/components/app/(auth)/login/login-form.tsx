@@ -18,6 +18,7 @@ import { useLogin } from "@/services/auth/login";
 import Spinner from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -25,9 +26,16 @@ export default function LoginForm() {
   const { control, handleSubmit } = loginFormContext;
   const { mutateAsync: login, isPending, isError, error } = useLogin();
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const redirect = searchParams.get("redirect") || "/";
+
   // handling functions
-  const onSubmit = (data: TLoginForm) => {
-    login(data);
+  const onSubmit = async (data: TLoginForm) => {
+    const loginResponse = await login(data);
+    if (loginResponse.message === "Logged in successfully") {
+      router.replace(redirect);
+    }
   };
 
   // useEffect
