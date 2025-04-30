@@ -24,7 +24,9 @@ export default function HomeProducts() {
       {isLoadingProducts ? <Spinner /> : null}
 
       {/* show error message if there is an error */}
-      {isError ? <p>{error.message}</p> : null}
+      {isError ? (
+        <p className="text-black-3 font-medium">{error.message}</p>
+      ) : null}
 
       {/* show products if they are loaded */}
       <div className="grid grid-cols-3 gap-x-3 gap-y-6">

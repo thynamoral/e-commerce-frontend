@@ -24,7 +24,13 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const loginFormContext = useFormContext<TLoginForm>();
   const { control, handleSubmit } = loginFormContext;
-  const { mutateAsync: login, isPending, isError, error } = useLogin();
+  const {
+    mutateAsync: login,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useLogin();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -44,6 +50,13 @@ export default function LoginForm() {
       toast.error(error?.message || "Something went wrong");
     }
   }, [isError, error]);
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      localStorage.setItem("isAuthenticated", "true");
+      window.dispatchEvent(new Event("authChange"));
+    }
+  }, [isSuccess]);
 
   return (
     <Form {...loginFormContext}>

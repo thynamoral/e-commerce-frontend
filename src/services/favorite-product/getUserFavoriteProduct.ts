@@ -7,9 +7,10 @@ const getUserFavoriteProduct = async () => {
   return response;
 };
 
-export const useGetUserFavoriteProduct = () => {
+export const useGetUserFavoriteProduct = (enabled: boolean = true) => {
   return useQuery({
     queryKey: ["getUserFavoriteProduct"],
     queryFn: getUserFavoriteProduct,
+    enabled,
   });
 };
