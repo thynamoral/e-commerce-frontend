@@ -1,4 +1,5 @@
 import { UNAUTHORIZED } from "@/lib/httpStatus";
+import { refreshToken } from "./auth/refreshToken";
 
 export const fetchApi = async <T>(
   request: RequestInfo,
@@ -20,7 +21,7 @@ export const fetchApi = async <T>(
   if (response.ok) return response.json() as Promise<T>;
 
   const errorData = await response.json().catch((e) => e);
-  const { status } = errorData;
+  const { status } = response;
 
   if (
     status === UNAUTHORIZED &&
@@ -28,9 +29,7 @@ export const fetchApi = async <T>(
     retry
   ) {
     try {
-      const refreshTokenResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/token/refresh`
-      );
+      const refreshTokenResponse = await refreshToken();
       if (refreshTokenResponse.ok)
         return fetchApi(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
@@ -48,6 +47,8 @@ export const fetchApi = async <T>(
 
 const redirectToLogin = () => {
   if (typeof window !== "undefined") {
-    window.location.replace("/login");
+    const currentPath = window.location.pathname + window.location.search;
+    const encodedPath = encodeURIComponent(currentPath);
+    window.location.replace(`/login?redirect=${encodedPath}`);
   }
 };

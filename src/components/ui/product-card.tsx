@@ -6,6 +6,8 @@ import FavoriteProductButton from "./favorite-product-button";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import { ProductResponse } from "@/services/product/getProducts";
+import { useGetUserFavoriteProduct } from "@/services/favorite-product/getUserFavoriteProduct";
+import { useAuth } from "@/hooks/useAuth";
 
 type ProductCardProps = {
   product: ProductResponse;
@@ -13,6 +15,17 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
+
+  const { isAuthenticated } = useAuth();
+
+  const { data: favoriteProducts } = useGetUserFavoriteProduct(isAuthenticated);
+
+  const isFavorite = isAuthenticated
+    ? favoriteProducts?.some(
+        (favProductItem) => favProductItem.product_id === product?.product_id
+      )
+    : false;
+
   return (
     <div
       onClick={() => router.push(`/products/${product.product_id}`)}
@@ -20,7 +33,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <div className="space-y-2">
         <div className="relative h-[360px]">
-          <FavoriteProductButton />
+          <FavoriteProductButton isFavorite={isFavorite!} />
           <Image
             src={product.image_urls[0]?.image_url}
             alt={product.product_slug}

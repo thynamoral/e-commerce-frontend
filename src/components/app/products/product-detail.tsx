@@ -1,13 +1,19 @@
 "use client";
+import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import CustomAlert from "@/components/ui/custom-alert";
+import { Toaster } from "@/components/ui/sonner";
 import Spinner from "@/components/ui/spinner";
 import { formatCurrency } from "@/lib/utils";
+import { useDeleteFavoriteProduct } from "@/services/favorite-product/deleteFavoriteProduct";
+import { useFavoriteProduct } from "@/services/favorite-product/favoriteProduct";
+import { useGetUserFavoriteProduct } from "@/services/favorite-product/getUserFavoriteProduct";
 import { useGetCurrentProduct } from "@/services/product/getCurrentProduct";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import React from "react";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -15,23 +21,120 @@ export default function ProductDetail() {
   const {
     data: product,
     isLoading: isLoadingProduct,
-    isError,
+    isError: isErrorProduct,
   } = useGetCurrentProduct(id);
 
-  if (isLoadingProduct) {
+  const { isAuthenticated } = useAuth();
+
+  // handle favorite product
+  const {
+    data: favoriteProducts,
+    isLoading: isLoadingFavoriteProducts,
+    isError: isErrorFavoriteProducts,
+  } = useGetUserFavoriteProduct(isAuthenticated);
+  const {
+    data: favoritedProductResponse,
+    mutateAsync: favoriteProduct,
+    isSuccess: isFavoriteProductSuccess,
+    isError: isFavoriteProductError,
+    error: errorMessageFavoriteProduct,
+  } = useFavoriteProduct();
+  const {
+    data: deletedFavoriteProductResponse,
+    mutateAsync: deleteFavoriteProduct,
+    isSuccess: isDeleteFavoriteProductSuccess,
+    isError: isDeleteFavoriteProductError,
+    error: errorMessageDeleteFavoriteProduct,
+  } = useDeleteFavoriteProduct();
+
+  const isFavorite = favoriteProducts?.some(
+    (favProductItem) => favProductItem.product_id === product?.product_id
+  );
+
+  // handling functions
+  const handleFavoriteProduct = (product_id: string) => {
+    favoriteProduct({ product_id });
+  };
+
+  const handleDeleteFavoriteProduct = (product_id: string) => {
+    deleteFavoriteProduct({ product_id });
+  };
+
+  // useEffect
+  React.useEffect(() => {
+    if (isFavoriteProductError) {
+      toast.error(
+        errorMessageFavoriteProduct?.message || "Something went wrong"
+      );
+    }
+  }, [isFavoriteProductError, errorMessageFavoriteProduct]);
+
+  React.useEffect(() => {
+    if (isDeleteFavoriteProductError) {
+      toast.error(
+        errorMessageDeleteFavoriteProduct?.message || "Something went wrong"
+      );
+    }
+  }, [isDeleteFavoriteProductError, errorMessageDeleteFavoriteProduct]);
+
+  React.useEffect(() => {
+    if (isFavoriteProductSuccess) {
+      toast.error(favoritedProductResponse?.message || "Something went wrong");
+    }
+  }, [isFavoriteProductSuccess, favoritedProductResponse]);
+
+  React.useEffect(() => {
+    if (isDeleteFavoriteProductSuccess) {
+      toast.error(
+        deletedFavoriteProductResponse?.message || "Something went wrong"
+      );
+    }
+  }, [isDeleteFavoriteProductSuccess, deletedFavoriteProductResponse]);
+
+  if (isLoadingProduct || isLoadingFavoriteProducts) {
     return <Spinner />;
   }
 
   return (
     <>
       {/* show error message if there is an error */}
-      {isError ? (
+      {isErrorProduct || isErrorFavoriteProducts ? (
         <div className="flex justify-center">
           <CustomAlert title="Something went wrong" type="error" />
         </div>
       ) : null}
 
       <div className="lg:h-full flex">
+        <Toaster
+          position="top-center"
+          offset={{ top: 100 }}
+          toastOptions={{
+            className: `${
+              !isFavoriteProductSuccess && isFavoriteProductError
+                ? "!text-red-500"
+                : "!text-green-500"
+            }`,
+            duration: 2500,
+            classNames: {
+              closeButton: "hover:!bg-white !border-none",
+            },
+          }}
+        />
+        <Toaster
+          position="top-center"
+          offset={{ top: 100 }}
+          toastOptions={{
+            className: `${
+              !isDeleteFavoriteProductSuccess && isDeleteFavoriteProductError
+                ? "!text-red-500"
+                : "!text-green-500"
+            }`,
+            duration: 2500,
+            classNames: {
+              closeButton: "hover:!bg-white !border-none",
+            },
+          }}
+        />
         {product ? (
           <>
             <div className="relative w-[40%]">
@@ -66,8 +169,15 @@ export default function ProductDetail() {
                   repudiandae iusto veritatis vero sed alias possimus dolorib
                 </p>
               </div>
-              <Button className="block max-w-[70%] w-full h-14 text-xl uppercase mx-auto rounded-full cursor-pointer">
-                Add to favorite
+              <Button
+                className="block max-w-[70%] w-full h-14 text-xl uppercase mx-auto rounded-full cursor-pointer"
+                onClick={() => {
+                  isFavorite
+                    ? handleDeleteFavoriteProduct(product?.product_id)
+                    : handleFavoriteProduct(product?.product_id);
+                }}
+              >
+                {isFavorite ? "Remove from favorites" : "Add to favorites"}
               </Button>
             </div>
           </>

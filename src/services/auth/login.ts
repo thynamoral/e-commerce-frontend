@@ -28,6 +28,7 @@ export const useLogin = () => {
     mutationFn: (payload: LoginPayload) => login(payload),
     onSuccess: (data) => {
       console.log(data.message);
+      return data;
     },
   });
 };
