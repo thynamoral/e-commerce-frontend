@@ -10,7 +10,7 @@ type GetCurrentUserResponse = {
   updatedat: Date;
 };
 
-const getCurrentUser = async () => {
+export const getCurrentUser = async () => {
   const response = await fetchApi<GetCurrentUserResponse>(`/user`);
   return response;
 };

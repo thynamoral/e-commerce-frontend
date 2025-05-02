@@ -1,5 +1,6 @@
 import { UNAUTHORIZED } from "@/lib/httpStatus";
 import { refreshToken } from "./auth/refreshToken";
+import { stat } from "fs";
 
 export const fetchApi = async <T>(
   request: RequestInfo,
@@ -40,6 +41,8 @@ export const fetchApi = async <T>(
     } catch (error) {
       redirectToLogin();
     }
+  } else if (status === UNAUTHORIZED && errorData?.errorCode === "FORBIDDEN") {
+    redirectToLogin();
   }
 
   throw errorData as Error;

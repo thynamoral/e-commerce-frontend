@@ -6,8 +6,9 @@ import { useGetCurrentUser } from "@/services/user/getCurrentUser";
 
 export default function FavoriteHeader() {
   const { isAuthenticated } = useAuth();
-  const { data: currentUser, isLoading: isLoadingUser } =
-    useGetCurrentUser(isAuthenticated);
+  const { data: currentUser, isLoading: isLoadingUser } = useGetCurrentUser(
+    isAuthenticated ?? false
+  );
 
   return (
     <div className="flex justify-between border-b-2 border-neutral-200 pb-4 mb-4">
@@ -17,7 +18,7 @@ export default function FavoriteHeader() {
           <Spinner />
         ) : (
           <>
-            <p className="text-lg font-medium">{currentUser?.email}</p>
+            <p className="text-lg font-medium">{currentUser?.email ?? null}</p>
             <Badge variant="success">
               {currentUser?.isverified ? "verified" : null}
             </Badge>

@@ -31,7 +31,7 @@ export default function ProductDetail() {
     data: favoriteProducts,
     isLoading: isLoadingFavoriteProducts,
     isError: isErrorFavoriteProducts,
-  } = useGetUserFavoriteProduct(isAuthenticated);
+  } = useGetUserFavoriteProduct(isAuthenticated ?? false);
   const {
     data: favoritedProductResponse,
     mutateAsync: favoriteProduct,

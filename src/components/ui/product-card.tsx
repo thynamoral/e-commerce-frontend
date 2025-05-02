@@ -18,7 +18,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const { isAuthenticated } = useAuth();
 
-  const { data: favoriteProducts } = useGetUserFavoriteProduct(isAuthenticated);
+  const { data: favoriteProducts } = useGetUserFavoriteProduct(
+    isAuthenticated ?? false
+  );
 
   const isFavorite = isAuthenticated
     ? favoriteProducts?.some(
