@@ -34,12 +34,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="cursor-pointer"
     >
       <div className="space-y-2">
-        <div className="relative h-[360px]">
+        <div>
           <FavoriteProductButton isFavorite={isFavorite!} />
           <Image
             src={product.image_urls[0]?.image_url}
             alt={product.product_slug}
-            fill
+            width={800}
+            height={800}
             priority
             className="object-cover"
           />

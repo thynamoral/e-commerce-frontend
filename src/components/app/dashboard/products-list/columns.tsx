@@ -26,11 +26,13 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
       const image = row.original.product_images?.[0];
       return (
         <div className="flex items-center gap-2">
-          <div className="relative w-[50px] h-[50px]">
+          <div>
             <Image
               src={image!.image_url}
               alt={row.original.product_slug}
-              fill
+              width={50}
+              height={50}
+              priority
               className="object-cover"
             />
           </div>

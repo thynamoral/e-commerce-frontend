@@ -1,19 +1,21 @@
 import { UNAUTHORIZED } from "@/lib/httpStatus";
 import { refreshToken } from "./auth/refreshToken";
-import { stat } from "fs";
 
 export const fetchApi = async <T>(
   request: RequestInfo,
   init?: RequestInit,
   retry: boolean = true
 ): Promise<T> => {
+  const isFormData = init?.body instanceof FormData;
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
     {
-      headers: {
-        "Content-Type": "application/json",
-        ...init?.headers,
-      },
+      headers: isFormData
+        ? { ...init?.headers } // don't set content-type for FormData
+        : {
+            "Content-Type": "application/json",
+            ...init?.headers,
+          },
       credentials: "include",
       ...init,
     }
