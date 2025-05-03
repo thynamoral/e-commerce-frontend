@@ -29,12 +29,19 @@ import { toast } from "sonner";
 import { useAddProduct } from "@/services/product/addProduct";
 import { Toaster } from "@/components/ui/sonner";
 import Spinner from "@/components/ui/spinner";
+import { useGetCurrentProduct } from "@/services/product/getCurrentProduct";
 
-export default function AddProduct() {
+type Props = {
+  productId?: string;
+};
+
+export default function AddProduct({ productId }: Props) {
   const addProductFormContext = useFormContext<TAddProductForm>();
   const { control, handleSubmit, reset } = addProductFormContext;
 
   // data from api
+  const { data: currentProduct, isLoading: isLoadingCurrentProduct } =
+    useGetCurrentProduct(productId ?? "", !!productId);
   const { data: categories } = useGetCategories();
 
   const {
@@ -47,7 +54,8 @@ export default function AddProduct() {
   } = useAddProduct();
   // handling functions
   const onSubmit = (data: TAddProductForm) => {
-    addProduct(data);
+    if (!productId) addProduct(data);
+    else console.log(data);
   };
 
   // useEffect
@@ -63,6 +71,21 @@ export default function AddProduct() {
       reset({ ...defaultAddProductValues });
     }
   }, [isSuccess]);
+
+  React.useEffect(() => {
+    if (productId && currentProduct) {
+      reset({
+        product_name: currentProduct.product_name,
+        category_id: currentProduct.category_id,
+        price: currentProduct.price.toString(),
+        stock_quantity: currentProduct.stock_quantity.toString(),
+        //@ts-ignore
+        images: currentProduct.image_urls[0]?.image_url,
+      });
+    }
+  }, [productId, currentProduct]);
+
+  if (productId && isLoadingCurrentProduct) return <Spinner />;
 
   return (
     <Form {...addProductFormContext}>

@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { formatCurrency } from "@/lib/utils";
 import { ProductsListForDashboardResponse } from "@/services/dashboard/getProductsListForDashboard";
 import { ColumnDef } from "@tanstack/react-table";
@@ -15,7 +16,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddProduct from "../add-product/add-product";
 
 export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
   {
@@ -107,27 +114,41 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const product = row.original;
-      const router = useRouter();
+
+      const [open, setOpen] = React.useState(false);
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <a href={`/products/${product.product_id}`} target="_blank">
-              <DropdownMenuItem className="cursor-pointer">
-                View product
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <a href={`/products/${product.product_id}`} target="_blank">
+                <DropdownMenuItem className="cursor-pointer">
+                  View product
+                </DropdownMenuItem>
+              </a>
+              <DropdownMenuItem onClick={() => setOpen(true)}>
+                Update product
               </DropdownMenuItem>
-            </a>
-            <DropdownMenuItem>Update product</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="w-[1200px] max-w-[90vw]">
+              <DialogTitle>Update product</DialogTitle>
+              <div>
+                <AddProduct productId={product.product_id} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       );
     },
   },

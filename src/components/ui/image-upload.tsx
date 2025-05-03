@@ -36,9 +36,7 @@ export function ImageUpload({ value, onChange }: Props) {
       return;
     }
 
-    // Create a preview URL
-    // const imageUrl = URL.createObjectURL(file);
-    // setSelectedImage(imageUrl);
+    // preview image
     onChange(file);
   };
 
@@ -48,10 +46,12 @@ export function ImageUpload({ value, onChange }: Props) {
 
   // useEffect
   React.useEffect(() => {
-    if (value) {
+    if (value instanceof File) {
       const url = URL.createObjectURL(value);
       setSelectedImage(url);
       return () => URL.revokeObjectURL(url); // Cleanup
+    } else if (typeof value === "string") {
+      setSelectedImage(value); // it's already a URL
     } else {
       setSelectedImage(null);
     }
