@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "../api";
 
-type CategoryResponse = {
+export type CategoryResponse = {
   category_id: string;
   category_name: string;
   slug: string;

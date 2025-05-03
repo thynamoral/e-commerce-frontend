@@ -2,8 +2,7 @@
 import { DataTable } from "@/components/ui/data-table";
 import Spinner from "@/components/ui/spinner";
 import { useGetProductsListForDashboard } from "@/services/dashboard/getProductsListForDashboard";
-import * as React from "react";
-import { columns, mockData } from "./columns";
+import { columns } from "./columns";
 
 export default function ProductsListForDashboard() {
   const { data: productsList, isLoading: isLoadingProductsList } =
