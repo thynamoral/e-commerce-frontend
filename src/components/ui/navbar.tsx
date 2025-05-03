@@ -1,10 +1,10 @@
 "use client";
+import * as React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLogout } from "@/services/auth/logout";
 import { Heart, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
 
 export default function Navbar() {
   const router = useRouter();
@@ -37,9 +37,9 @@ export default function Navbar() {
           <Link href="/favorites">
             <Heart />
           </Link>
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <LogOut className="cursor-pointer" onClick={handleLogout} />
-          )}
+          ) : null}
         </div>
       </div>
     </header>

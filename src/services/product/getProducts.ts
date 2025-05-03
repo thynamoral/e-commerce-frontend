@@ -14,6 +14,7 @@ export type ProductResponse = {
   category_id: string;
   category_name: string;
   category_slug: string;
+  stock_quantity: number;
   image_urls: ImageUrl[];
 };
 

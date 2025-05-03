@@ -7,9 +7,13 @@ const getCurrentProduct = async (productId: string) => {
   return response;
 };
 
-export const useGetCurrentProduct = (productId: string) => {
+export const useGetCurrentProduct = (
+  productId: string,
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: ["current-product", productId],
     queryFn: () => getCurrentProduct(productId),
+    enabled,
   });
 };

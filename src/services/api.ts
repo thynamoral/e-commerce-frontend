@@ -6,13 +6,16 @@ export const fetchApi = async <T>(
   init?: RequestInit,
   retry: boolean = true
 ): Promise<T> => {
+  const isFormData = init?.body instanceof FormData;
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
     {
-      headers: {
-        "Content-Type": "application/json",
-        ...init?.headers,
-      },
+      headers: isFormData
+        ? { ...init?.headers } // don't set content-type for FormData
+        : {
+            "Content-Type": "application/json",
+            ...init?.headers,
+          },
       credentials: "include",
       ...init,
     }
@@ -40,6 +43,8 @@ export const fetchApi = async <T>(
     } catch (error) {
       redirectToLogin();
     }
+  } else if (status === UNAUTHORIZED && errorData?.errorCode === "FORBIDDEN") {
+    redirectToLogin();
   }
 
   throw errorData as Error;

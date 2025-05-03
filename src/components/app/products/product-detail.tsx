@@ -31,7 +31,7 @@ export default function ProductDetail() {
     data: favoriteProducts,
     isLoading: isLoadingFavoriteProducts,
     isError: isErrorFavoriteProducts,
-  } = useGetUserFavoriteProduct(isAuthenticated);
+  } = useGetUserFavoriteProduct(isAuthenticated ?? false);
   const {
     data: favoritedProductResponse,
     mutateAsync: favoriteProduct,
@@ -137,12 +137,14 @@ export default function ProductDetail() {
         />
         {product ? (
           <>
-            <div className="relative w-[40%]">
+            <div className="w-[40%]">
               <Image
                 src={product?.image_urls[0]?.image_url}
                 alt={product?.product_slug}
-                fill
-                className="object-fill"
+                width={800}
+                height={800}
+                priority
+                className="object-cover"
               />
             </div>
             <div className="flex-1 flex flex-col justify-between px-6 pt-12">

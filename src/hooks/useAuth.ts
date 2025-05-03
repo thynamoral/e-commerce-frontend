@@ -2,17 +2,14 @@
 import { useEffect, useState } from "react";
 
 export const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    typeof window !== "undefined" &&
-      localStorage.getItem("isAuthenticated") === "true"
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = unknown
 
   useEffect(() => {
     const syncAuth = () => {
       setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
     };
 
-    // Update when local tab changes
+    syncAuth(); // run once on mount
     window.addEventListener("authChange", syncAuth);
 
     return () => {
