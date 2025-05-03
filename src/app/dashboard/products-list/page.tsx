@@ -1,3 +1,5 @@
+import ProductsListForDashboard from "@/components/app/dashboard/products-list/products-list";
+
 export default function DashboardProductsPage() {
-  return <div>DashboardProductsPage</div>;
+  return <ProductsListForDashboard />;
 }
