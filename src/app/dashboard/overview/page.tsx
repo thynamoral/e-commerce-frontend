@@ -1,5 +1,5 @@
-import React from "react";
+import DashboardOverview from "@/components/app/dashboard/overview/dashboard-overview";
 
 export default function DashboardOverviewPage() {
-  return <div>DashboardOverviewPage</div>;
+  return <DashboardOverview />;
 }
