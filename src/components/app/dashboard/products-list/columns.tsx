@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AddProduct from "../add-product/add-product";
+import { useDeleteProduct } from "@/services/product/deleteProduct";
 
 export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
   {
@@ -117,6 +118,8 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
 
       const [open, setOpen] = React.useState(false);
 
+      const { mutateAsync: deleteProduct } = useDeleteProduct();
+
       return (
         <>
           <DropdownMenu>
@@ -137,6 +140,11 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
               <DropdownMenuItem onClick={() => setOpen(true)}>
                 Update product
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => deleteProduct(product.product_id)}
+              >
+                Delete product
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -144,7 +152,7 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
             <DialogContent className="w-[1200px] max-w-[90vw]">
               <DialogTitle>Update product</DialogTitle>
               <div>
-                <AddProduct productId={product.product_id} />
+                <AddProduct product_id={product.product_id} />
               </div>
             </DialogContent>
           </Dialog>

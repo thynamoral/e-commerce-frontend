@@ -6,7 +6,7 @@ import { AlertCircle, Upload } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type Props = {
-  value: File | null | undefined;
+  value: string | File;
   onChange: (file: File | null) => void;
 };
 
@@ -73,7 +73,7 @@ export function ImageUpload({ value, onChange }: Props) {
         {selectedImage ? (
           <div className="w-full">
             <img
-              src={selectedImage || "/placeholder.svg"}
+              src={selectedImage}
               alt="Selected"
               className="w-full h-64 object-contain rounded-md mb-4"
             />

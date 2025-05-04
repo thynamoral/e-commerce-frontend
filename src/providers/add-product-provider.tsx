@@ -19,9 +19,15 @@ export const addProductSchema = z.object({
       message: "Expected number, received a string",
     }),
   images: z
-    .instanceof(File)
-    .nullable()
-    .refine((file) => file !== null, { message: "Image is required" }),
+    .union([z.instanceof(File), z.string()])
+    .refine(
+      (val) => (typeof val === "string" ? val.length > 0 : val instanceof File),
+      {
+        message: "Image is required",
+      }
+    ),
+  product_id: z.string().optional(),
+  product_image_id: z.string().optional(),
 });
 
 export type AddProductForm = z.infer<typeof addProductSchema>;
@@ -31,8 +37,7 @@ export const defaultAddProductValues: AddProductForm = {
   category_id: "",
   price: "",
   stock_quantity: "",
-  //@ts-ignore
-  images: null,
+  images: "",
 };
 
 export default function AddProductProvider({
