@@ -7,19 +7,16 @@ export const fetchApi = async <T>(
   retry: boolean = true
 ): Promise<T> => {
   const isFormData = init?.body instanceof FormData;
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
-    {
-      headers: isFormData
-        ? { ...init?.headers } // don't set content-type for FormData
-        : {
-            "Content-Type": "application/json",
-            ...init?.headers,
-          },
-      credentials: "include",
-      ...init,
-    }
-  );
+  const response = await fetch(`/api${request}`, {
+    headers: isFormData
+      ? { ...init?.headers } // don't set content-type for FormData
+      : {
+          "Content-Type": "application/json",
+          ...init?.headers,
+        },
+    credentials: "include",
+    ...init,
+  });
 
   if (response.ok) return response.json() as Promise<T>;
 
@@ -34,11 +31,7 @@ export const fetchApi = async <T>(
     try {
       const refreshTokenResponse = await refreshToken();
       if (refreshTokenResponse.ok)
-        return fetchApi(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}${request}`,
-          init,
-          false
-        ) as Promise<T>;
+        return fetchApi(`/api${request}`, init, false) as Promise<T>;
       else redirectToLogin();
     } catch (error) {
       redirectToLogin();
