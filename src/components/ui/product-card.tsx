@@ -32,9 +32,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div
       onClick={() => router.push(`/products/${product.product_id}`)}
       className="cursor-pointer"
+      title={product.product_name}
     >
       <div className="space-y-2">
-        <div>
+        <div className="relative">
           <FavoriteProductButton isFavorite={isFavorite!} />
           <Image
             src={product.image_urls[0]?.image_url}
