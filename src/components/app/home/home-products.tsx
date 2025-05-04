@@ -29,7 +29,7 @@ export default function HomeProducts() {
       ) : null}
 
       {/* show products if they are loaded */}
-      <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+      <div className="grid gap-x-3 gap-y-6 grid-cols-2 md:grid-cols-3">
         {products?.map((product) => (
           <ProductCard key={product.product_id} product={product} />
         ))}

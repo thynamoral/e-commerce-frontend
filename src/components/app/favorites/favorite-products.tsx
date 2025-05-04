@@ -23,7 +23,7 @@ export default function FavoriteProducts() {
           {"You haven’t added any favorites yet, go find something you love!"}
         </p>
       ) : (
-        <div className="grid grid-cols-4 gap-x-3 gap-y-6">
+        <div className="grid gap-x-3 gap-y-6 grid-cols-2 md:grid-cols-3">
           {favoriteProducts?.map((product) => (
             <ProductCard key={product.product_id} product={product} />
           ))}

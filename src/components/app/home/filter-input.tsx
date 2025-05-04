@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form, FormItem } from "@/components/ui/form";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function FilterInput() {
   const form = useForm();
@@ -72,39 +73,41 @@ export default function FilterInput() {
           Clear Filter
         </Button>
       </div>
-      <div className="flex flex-col gap-3 mt-3 max-lg:flex-row">
-        <Form {...form}>
-          {categories?.map((category) => (
-            <FormItem key={category.category_id} className="flex gap-3">
-              <Controller
-                control={control}
-                name="category"
-                render={({ field }) => {
-                  const { value, onChange } = field;
-                  const isChecked = value?.includes(category.slug);
-
-                  return (
-                    <CheckboxWrapper
-                      id={category.category_id}
-                      checked={isChecked}
-                      onCheckedChange={(checked) =>
-                        handleOnCheckedChange(
-                          checked,
-                          onChange,
-                          value,
-                          category.slug
-                        )
-                      }
-                    >
-                      {category.category_name}
-                    </CheckboxWrapper>
-                  );
-                }}
-              />
-            </FormItem>
-          ))}
-        </Form>
-      </div>
+      <ScrollArea className="w-full h-12 whitespace-nowrap">
+        <div className="w-max flex flex-col gap-3 mt-3 max-lg:flex-row">
+          <Form {...form}>
+            {categories?.map((category) => (
+              <FormItem key={category.category_id} className="flex gap-3">
+                <Controller
+                  control={control}
+                  name="category"
+                  render={({ field }) => {
+                    const { value, onChange } = field;
+                    const isChecked = value?.includes(category.slug);
+                    return (
+                      <CheckboxWrapper
+                        id={category.category_id}
+                        checked={isChecked}
+                        onCheckedChange={(checked) =>
+                          handleOnCheckedChange(
+                            checked,
+                            onChange,
+                            value,
+                            category.slug
+                          )
+                        }
+                      >
+                        {category.category_name}
+                      </CheckboxWrapper>
+                    );
+                  }}
+                />
+              </FormItem>
+            ))}
+          </Form>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }

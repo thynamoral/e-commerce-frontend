@@ -3,7 +3,7 @@ import ContainerWrapper from "@/components/ui/container-wrapper";
 
 export default function ProductDetailPage() {
   return (
-    <ContainerWrapper className="max-w-5xl bg-white p-12">
+    <ContainerWrapper className="max-w-5xl flex justify-center items-center bg-white p-12">
       <ProductDetail />
     </ContainerWrapper>
   );
