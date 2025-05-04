@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="cursor-pointer"
     >
       <div className="space-y-2">
-        <div>
+        <div className="relative">
           <FavoriteProductButton isFavorite={isFavorite!} />
           <Image
             src={product.image_urls[0]?.image_url}
