@@ -3,16 +3,13 @@ export type RefreshTokenResponse = {
 };
 
 export const refreshToken = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/token/refresh`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
+  const response = await fetch(`/api/auth/token/refresh`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
 
   if (!response.ok) {
     const errorData = await response.json().catch((e) => e);
