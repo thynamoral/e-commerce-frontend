@@ -72,7 +72,7 @@ export default function FilterInput() {
           Clear Filter
         </Button>
       </div>
-      <div className="flex flex-col gap-3 mt-3">
+      <div className="flex flex-col gap-3 mt-3 max-lg:flex-row">
         <Form {...form}>
           {categories?.map((category) => (
             <FormItem key={category.category_id} className="flex gap-3">

@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Suspense fallback={<Spinner />}>
       <SearchAndFilterFormProvider>
-        <ContainerWrapper className="lg:min-h-full flex gap-4">
+        <ContainerWrapper className="flex flex-col gap-4 lg:min-h-full lg:flex-row">
           <SearchAndFilter />
           <HomeProducts />
         </ContainerWrapper>
