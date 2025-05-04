@@ -32,11 +32,13 @@ export const fetchApi = async <T>(
       const refreshTokenResponse = await refreshToken();
       if (refreshTokenResponse.ok)
         return fetchApi(`/api${request}`, init, false) as Promise<T>;
-      else redirectToLogin();
+      else throw refreshTokenResponse;
     } catch (error) {
+      removeAuthLocalStorage();
       redirectToLogin();
     }
   } else if (status === UNAUTHORIZED && errorData?.errorCode === "FORBIDDEN") {
+    removeAuthLocalStorage();
     redirectToLogin();
   }
 
@@ -49,4 +51,9 @@ const redirectToLogin = () => {
     const encodedPath = encodeURIComponent(currentPath);
     window.location.replace(`/login?redirect=${encodedPath}`);
   }
+};
+
+const removeAuthLocalStorage = () => {
+  localStorage.removeItem("isAuthenticated");
+  window.dispatchEvent(new Event("authChange"));
 };
