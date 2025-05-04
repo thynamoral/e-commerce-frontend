@@ -18,6 +18,7 @@ const login = async (loginPayload: LoginPayload) => {
   const response = await fetchApi<LoginResponse>(`/auth/login`, {
     method: "POST",
     body: JSON.stringify(loginPayload),
+    credentials: "include",
   });
   return response;
 };

@@ -104,7 +104,7 @@ export default function ProductDetail() {
         </div>
       ) : null}
 
-      <div className="lg:h-full flex">
+      <div className="flex flex-col md:flex-row md:min-h-[300px]">
         <Toaster
           position="top-center"
           offset={{ top: 100 }}
@@ -137,7 +137,7 @@ export default function ProductDetail() {
         />
         {product ? (
           <>
-            <div className="w-[40%]">
+            <div className="w-full flex justify-center items-center md:w-[40%]">
               <Image
                 src={product?.image_urls[0]?.image_url}
                 alt={product?.product_slug}
@@ -148,7 +148,7 @@ export default function ProductDetail() {
               />
             </div>
             <div className="flex-1 flex flex-col justify-between px-6 pt-12">
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-4 mb-4">
                 <h2 className="font-bold text-2xl uppercase">
                   {product.product_name}
                 </h2>
@@ -158,7 +158,7 @@ export default function ProductDetail() {
                   </p>
                   <Badge className="text-[10px]">{product.category_name}</Badge>
                 </div>
-                <p className="line-clamp-6">
+                <p className="line-clamp-4 lg:line-clamp-6">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Consequatur labore iste, ea quod maiores perspiciatis laborum
                   harum delectus est molestias debitis placeat, ab, voluptatem
@@ -172,7 +172,7 @@ export default function ProductDetail() {
                 </p>
               </div>
               <Button
-                className="block max-w-[70%] w-full h-14 text-xl uppercase mx-auto rounded-full cursor-pointer"
+                className="block w-full uppercase mx-auto rounded-full cursor-pointer text-sm lg:h-14 lg:text-xl"
                 onClick={() => {
                   isFavorite
                     ? handleDeleteFavoriteProduct(product?.product_id)

@@ -48,9 +48,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         <div className="px-3 space-y-1.5">
           <p className="font-medium text-black-3">{product.product_name}</p>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col min-[576px]:flex-row min-[576px]:items-center min-[576px]:justify-between">
             <p className="text-lg font-bold">{formatCurrency(product.price)}</p>
-            <Badge className="text-[10px]">{product.category_name}</Badge>
+            <Badge className="text-[10px] -ml-1 min-[576px]:ml-0">
+              {product.category_name}
+            </Badge>
           </div>
         </div>
       </div>
