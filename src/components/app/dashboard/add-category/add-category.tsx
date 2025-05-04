@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
+import { useGetCurrentCategory } from "@/services/category/getCurrentCategory";
+import { useUpdateCategory } from "@/services/category/updateCategory";
 
 export const categorySchema = z.object({
   category_name: z.string().min(1, { message: "Category name is required" }),
@@ -24,40 +26,87 @@ export const categorySchema = z.object({
 
 export type AddCategoryForm = z.infer<typeof categorySchema>;
 
-export default function AddCategory() {
+type Props = {
+  category_id?: string;
+};
+
+export default function AddCategory({ category_id }: Props) {
   const addCategoryForm = useForm<AddCategoryForm>({
     defaultValues: { category_name: "" },
     resolver: zodResolver(categorySchema),
   });
   const { control, handleSubmit, reset } = addCategoryForm;
 
+  // data from api
+  const { data: currentCategory, isLoading: isLoadingCurrentCategory } =
+    useGetCurrentCategory(category_id ?? "");
+
   const {
     data: addCategoryResponse,
     mutateAsync: addCategory,
-    isPending,
-    isSuccess,
-    isError,
-    error,
+    isPending: isPendingAddCategory,
+    isSuccess: isSuccessAddCategory,
+    isError: isErrorAddCategory,
+    error: errorAddCategory,
   } = useAddCategory();
+  const {
+    data: updateCategoryResponse,
+    mutateAsync: updateCategory,
+    isPending: isPendingUpdateCategory,
+    isSuccess: isSuccessUpdateCategory,
+    isError: isErrorUpdateCategory,
+    error: errorUpdateCategory,
+  } = useUpdateCategory();
 
   // handling functions
   const onSubmit = (data: AddCategoryForm) => {
-    addCategory(data);
+    // console.log(data);
+    if (!category_id) addCategory(data);
+    else updateCategory({ ...data, category_id });
   };
 
   // useEffect
   React.useEffect(() => {
-    if (isError) {
-      toast.error(error?.message || "Something went wrong");
+    if (isErrorAddCategory) {
+      toast.error(errorAddCategory?.message || "Failed to add category");
     }
-  }, [isError, error]);
+    if (isErrorUpdateCategory) {
+      toast.error(errorUpdateCategory?.message || "Failed to update category");
+    }
 
-  React.useEffect(() => {
-    if (isSuccess) {
-      toast.success(addCategoryResponse?.message || "Successfully registered");
+    if (isSuccessAddCategory) {
+      toast.success(
+        addCategoryResponse?.message || "Category added successfully"
+      );
       reset({ category_name: "" });
     }
-  }, [isSuccess]);
+
+    if (isSuccessUpdateCategory) {
+      toast.success(
+        updateCategoryResponse?.message || "Category updated successfully"
+      );
+      reset({ category_name: "" });
+    }
+  }, [
+    isErrorAddCategory,
+    errorAddCategory,
+    isErrorUpdateCategory,
+    errorUpdateCategory,
+    isSuccessAddCategory,
+    addCategoryResponse,
+    isSuccessUpdateCategory,
+    updateCategoryResponse,
+  ]);
+
+  React.useEffect(() => {
+    if (category_id && currentCategory) {
+      reset({
+        category_name: currentCategory.category_name,
+      });
+    }
+  }, [category_id, currentCategory]);
+
+  if (category_id && isLoadingCurrentCategory) return <Spinner />;
 
   return (
     <Form {...addCategoryForm}>
@@ -66,10 +115,20 @@ export default function AddCategory() {
         offset={{ top: 100 }}
         toastOptions={{
           className: `${
-            !isSuccess && isError ? "!text-red-500" : "!text-green-500"
+            (!isSuccessAddCategory || !isSuccessUpdateCategory) &&
+            (isErrorAddCategory || isErrorUpdateCategory)
+              ? "!text-red-500"
+              : "!text-green-500"
           }`,
-          duration: isSuccess && !isError ? Infinity : 2500,
-          closeButton: isSuccess && !isError,
+          duration:
+            (isSuccessAddCategory || isSuccessUpdateCategory) &&
+            (!isErrorAddCategory || !isErrorUpdateCategory)
+              ? Infinity
+              : 2500,
+          closeButton:
+            (isSuccessAddCategory || isSuccessUpdateCategory) &&
+            !isErrorAddCategory &&
+            !isErrorUpdateCategory,
           classNames: {
             closeButton: "hover:!bg-white !border-none",
           },
@@ -92,15 +151,16 @@ export default function AddCategory() {
             />
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPendingAddCategory || isPendingUpdateCategory}
               className="relative cursor-pointer block ml-auto"
             >
-              <span>Add category</span>
-              {isPending && (
-                <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
-                  <Spinner />
-                </span>
-              )}
+              <span>{category_id ? "Update category" : "Add category"}</span>
+              {isPendingAddCategory ||
+                (isPendingUpdateCategory && (
+                  <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
+                    <Spinner />
+                  </span>
+                ))}
             </Button>
           </CardContent>
         </Card>
