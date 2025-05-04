@@ -30,62 +30,93 @@ import { useAddProduct } from "@/services/product/addProduct";
 import { Toaster } from "@/components/ui/sonner";
 import Spinner from "@/components/ui/spinner";
 import { useGetCurrentProduct } from "@/services/product/getCurrentProduct";
+import { useUpdateProduct } from "@/services/product/updateProduct";
 
 type Props = {
-  productId?: string;
+  product_id?: string;
 };
 
-export default function AddProduct({ productId }: Props) {
+export default function AddProduct({ product_id }: Props) {
   const addProductFormContext = useFormContext<TAddProductForm>();
   const { control, handleSubmit, reset } = addProductFormContext;
 
   // data from api
   const { data: currentProduct, isLoading: isLoadingCurrentProduct } =
-    useGetCurrentProduct(productId ?? "", !!productId);
+    useGetCurrentProduct(product_id ?? "", !!product_id);
   const { data: categories } = useGetCategories();
 
   const {
     data: addProductResponse,
     mutateAsync: addProduct,
-    isPending,
-    isSuccess,
-    isError,
-    error,
+    isPending: isPendingAddProduct,
+    isSuccess: isSuccessAddProduct,
+    isError: isErrorAddProduct,
+    error: errorAddProduct,
   } = useAddProduct();
+  const {
+    data: updateProductResponse,
+    mutateAsync: updateProduct,
+    isPending: isPendingUpdateProduct,
+    isSuccess: isSuccessUpdateProduct,
+    isError: isErrorUpdateProduct,
+    error: errorUpdateProduct,
+  } = useUpdateProduct();
   // handling functions
   const onSubmit = (data: TAddProductForm) => {
-    if (!productId) addProduct(data);
-    else console.log(data);
+    // console.log(data);
+    if (!product_id) addProduct(data);
+    else updateProduct(data);
   };
 
   // useEffect
   React.useEffect(() => {
-    if (isError) {
-      toast.error(error?.message || "Something went wrong");
+    if (isErrorAddProduct) {
+      toast.error(errorAddProduct?.message || "Failed to add product");
     }
-  }, [isError, error]);
+    if (isErrorUpdateProduct) {
+      toast.error(errorUpdateProduct?.message || "Failed to update product");
+    }
 
-  React.useEffect(() => {
-    if (isSuccess) {
-      toast.success(addProductResponse?.message || "Successfully registered");
+    if (isSuccessAddProduct) {
+      toast.success(
+        addProductResponse?.message || "Product added successfully"
+      );
       reset({ ...defaultAddProductValues });
     }
-  }, [isSuccess]);
+
+    if (isSuccessUpdateProduct) {
+      toast.success(
+        updateProductResponse?.message || "Product updated successfully"
+      );
+      reset({ ...defaultAddProductValues });
+    }
+  }, [
+    isErrorAddProduct,
+    errorAddProduct,
+    isErrorUpdateProduct,
+    errorUpdateProduct,
+    isSuccessAddProduct,
+    addProductResponse,
+    isSuccessUpdateProduct,
+    updateProductResponse,
+  ]);
 
   React.useEffect(() => {
-    if (productId && currentProduct) {
+    if (product_id && currentProduct) {
       reset({
+        product_id,
         product_name: currentProduct.product_name,
         category_id: currentProduct.category_id,
         price: currentProduct.price.toString(),
         stock_quantity: currentProduct.stock_quantity.toString(),
         //@ts-ignore
         images: currentProduct.image_urls[0]?.image_url,
+        product_image_id: currentProduct.image_urls[0]?.product_image_id,
       });
     }
-  }, [productId, currentProduct]);
+  }, [product_id, currentProduct]);
 
-  if (productId && isLoadingCurrentProduct) return <Spinner />;
+  if (product_id && isLoadingCurrentProduct) return <Spinner />;
 
   return (
     <Form {...addProductFormContext}>
@@ -94,10 +125,20 @@ export default function AddProduct({ productId }: Props) {
         offset={{ top: 100 }}
         toastOptions={{
           className: `${
-            !isSuccess && isError ? "!text-red-500" : "!text-green-500"
+            (!isSuccessAddProduct || !isSuccessUpdateProduct) &&
+            (isErrorAddProduct || isErrorUpdateProduct)
+              ? "!text-red-500"
+              : "!text-green-500"
           }`,
-          duration: isSuccess && !isError ? Infinity : 2500,
-          closeButton: isSuccess && !isError,
+          duration:
+            (isSuccessAddProduct || isSuccessUpdateProduct) &&
+            (!isErrorAddProduct || !isErrorUpdateProduct)
+              ? Infinity
+              : 2500,
+          closeButton:
+            (isSuccessAddProduct || isSuccessUpdateProduct) &&
+            !isErrorAddProduct &&
+            !isErrorUpdateProduct,
           classNames: {
             closeButton: "hover:!bg-white !border-none",
           },
@@ -206,15 +247,16 @@ export default function AddProduct({ productId }: Props) {
         <div className="flex justify-end mt-4">
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPendingAddProduct || isPendingUpdateProduct}
             className="relative cursor-pointer"
           >
-            <span>Add product</span>
-            {isPending && (
-              <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
-                <Spinner />
-              </span>
-            )}
+            <span>{product_id ? "Update product" : "Add product"}</span>
+            {isPendingAddProduct ||
+              (isPendingUpdateProduct && (
+                <span className="w-4 h-4 absolute top-1/2 right-2 -translate-y-1/2 text-black-3">
+                  <Spinner />
+                </span>
+              ))}
           </Button>
         </div>
       </form>

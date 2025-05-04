@@ -152,7 +152,7 @@ export const columns: ColumnDef<ProductsListForDashboardResponse>[] = [
             <DialogContent className="w-[1200px] max-w-[90vw]">
               <DialogTitle>Update product</DialogTitle>
               <div>
-                <AddProduct productId={product.product_id} />
+                <AddProduct product_id={product.product_id} />
               </div>
             </DialogContent>
           </Dialog>

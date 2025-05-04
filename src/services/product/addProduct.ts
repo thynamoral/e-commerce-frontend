@@ -1,13 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi } from "../api";
+import { AddProductForm } from "@/providers/add-product-provider";
 
-export type AddProductRequest = {
-  product_name: string;
-  category_id: string;
-  price: string;
-  stock_quantity: string;
-  images: File | null;
-};
+export type AddProductRequest = AddProductForm;
 
 export type AddProductResponse = {
   message: string;
