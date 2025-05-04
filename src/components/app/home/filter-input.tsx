@@ -73,8 +73,8 @@ export default function FilterInput() {
           Clear Filter
         </Button>
       </div>
-      <ScrollArea className="w-full h-12 whitespace-nowrap">
-        <div className="w-max flex flex-col gap-3 mt-3 max-lg:flex-row">
+      <ScrollArea className="w-full h-12 whitespace-nowrap lg:h-auto">
+        <div className="w-max flex flex-row gap-3 mt-3 lg:flex-col">
           <Form {...form}>
             {categories?.map((category) => (
               <FormItem key={category.category_id} className="flex gap-3">

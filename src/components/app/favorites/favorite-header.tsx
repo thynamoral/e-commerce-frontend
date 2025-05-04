@@ -6,15 +6,13 @@ import { useGetCurrentUser } from "@/services/user/getCurrentUser";
 
 export default function FavoriteHeader() {
   const { isAuthenticated } = useAuth();
-  const { data: currentUser, isLoading: isLoadingUser } = useGetCurrentUser(
-    isAuthenticated ?? false
-  );
+  const { data: currentUser, isLoading: isLoadingUser } = useGetCurrentUser();
 
   return (
     <div className="flex justify-between border-b-2 border-neutral-200 pb-4 mb-4">
       <h2 className="text-xl font-bold">My Favorite Products</h2>
       <div className="text-right hidden md:block">
-        {!currentUser && !isLoadingUser ? (
+        {isLoadingUser ? (
           <Spinner />
         ) : (
           <>
