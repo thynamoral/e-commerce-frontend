@@ -32,6 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div
       onClick={() => router.push(`/products/${product.product_id}`)}
       className="cursor-pointer"
+      title={product.product_name}
     >
       <div className="space-y-2">
         <div className="relative">
